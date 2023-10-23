@@ -65,4 +65,13 @@ public class BantumiViewModel extends ViewModel {
         }
         tablero.get(pos).setValue(v);
     }
+
+    public String getTableroToString() {
+        StringBuilder tableroString = new StringBuilder();
+        for (MutableLiveData<Integer> casilla : this.tablero) {
+            tableroString.append(casilla.getValue()).append(" ");
+        }
+        return tableroString.toString();
+    }
+
 }

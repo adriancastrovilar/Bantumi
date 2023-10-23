@@ -1,5 +1,7 @@
 package es.upm.miw.bantumi;
 
+import static android.provider.Settings.System.getString;
+
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,13 +18,20 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Locale;
+import java.util.Objects;
 
 import es.upm.miw.bantumi.model.BantumiViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
-    protected final String LOG_TAG = "MiW";
+    protected static final String LOG_TAG = "MiW";
     JuegoBantumi juegoBantumi;
     BantumiViewModel bantumiVM;
     int numInicialSemillas;
@@ -133,14 +142,20 @@ public class MainActivity extends AppCompatActivity {
                 restartGameDialog.show(getSupportFragmentManager(), "RestartGameDialogFragment");
                 return true;
 
+            case R.id.opcGuardarPartida:
+                DialogFragment saveGameDialog = new SaveGameDialogFragment();
+                saveGameDialog.show(getSupportFragmentManager(), "SaveGameDialogFragment");
+                return true;
+
+            case R.id.opcRecuperarPartida:
+                DialogFragment backupGameDialog = new BackupGameDialogFragment();
+                backupGameDialog.show(getSupportFragmentManager(), "BackupGameDialogFragment");
+                return true;
+
             // @TODO!!! resto opciones
 
             default:
-                Snackbar.make(
-                        findViewById(android.R.id.content),
-                        getString(R.string.txtSinImplementar),
-                        Snackbar.LENGTH_LONG
-                ).show();
+                showSnackbarById(R.string.txtSinImplementar);
         }
         return true;
     }
@@ -206,5 +221,67 @@ public class MainActivity extends AppCompatActivity {
 
         // terminar
         new FinalAlertDialog().show(getSupportFragmentManager(), "ALERT_DIALOG");
+    }
+
+    public void reiniciarPartida() {
+        this.juegoBantumi.inicializar(JuegoBantumi.Turno.turnoJ1);
+        this.showSnackbarById(R.string.txtRestartGame);
+    }
+
+    public void guardarPartida() {
+        this.writeSaveFile(this.juegoBantumi.serializa());
+    }
+
+    private void writeSaveFile(String serializedGame) {
+        try {
+            Log.i(LOG_TAG, "Guardando partida...");
+            FileOutputStream fOut = openFileOutput(getString(R.string.saveFile), MODE_PRIVATE);
+            fOut.write(serializedGame.getBytes());
+            fOut.close();
+            Log.i(LOG_TAG, "Partida guardada");
+            this.showSnackbarById(R.string.txtSavedGame);
+        } catch (IOException iex) {
+            Log.e(LOG_TAG, Objects.requireNonNull(iex.getMessage()));
+            iex.printStackTrace();
+        }
+    }
+
+    public void recuperarPartida() {
+        this.readSaveFile();
+    }
+
+    private void readSaveFile() {
+        try {
+            Log.i(LOG_TAG, "Restaurando partida...");
+            FileInputStream fInput = openFileInput(getString(R.string.saveFile));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fInput));
+            String endl = "\n";
+            String line = reader.readLine();
+            StringBuilder builder = new StringBuilder();
+            builder.append(line)
+                    .append(endl);
+            while (line != null) {
+                line = reader.readLine();
+                builder.append(line)
+                        .append(endl);
+            }
+            this.juegoBantumi.deserializa(builder.toString());
+            fInput.close();
+            Log.i(LOG_TAG, "Partida restaurada");
+            this.showSnackbarById(R.string.txtBackupGame);
+        } catch (FileNotFoundException fEx) {
+            this.showSnackbarById(R.string.txtNoSaveFile);
+        } catch (IOException iex) {
+            Log.e(LOG_TAG, Objects.requireNonNull(iex.getMessage()));
+            iex.printStackTrace();
+        }
+    }
+
+    private void showSnackbarById(Integer id) {
+        Snackbar.make(
+                findViewById(android.R.id.content),
+                getString(id),
+                Snackbar.LENGTH_LONG
+        ).show();
     }
 }

@@ -6,6 +6,7 @@ import es.upm.miw.bantumi.model.BantumiViewModel;
 
 public class JuegoBantumi {
 
+
     public static final int NUM_POSICIONES = 14;
     // Posiciones 0-5: campo jugador 1
     // Posición 6: depósito jugador 1
@@ -192,8 +193,10 @@ public class JuegoBantumi {
      * @return juego serializado
      */
     public String serializa() {
-        // @TODO
-        return null;
+        String serializedData = "";
+        serializedData += this.bantumiVM.getTurno().getValue() + "\n";
+        serializedData += this.bantumiVM.getTableroToString() + "\n";
+        return serializedData;
     }
 
     /**
@@ -202,6 +205,13 @@ public class JuegoBantumi {
      * @param juegoSerializado cadena que representa el estado completo del juego
      */
     public void deserializa(String juegoSerializado) {
-        // @TODO
+        String[] processedData = juegoSerializado.split("\n");
+        this.bantumiVM.setTurno(Turno.valueOf(processedData[0]));
+        String tableroToString = processedData[1];
+        String[] casillas = tableroToString.split(" ");
+        for (int i = 0; i < casillas.length; i++) {
+            this.setSemillas(i, Integer.parseInt(casillas[i]));
+        }
     }
+
 }

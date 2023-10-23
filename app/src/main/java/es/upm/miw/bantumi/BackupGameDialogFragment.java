@@ -8,7 +8,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialog;
 import androidx.fragment.app.DialogFragment;
 
-public class RestartGameDialogFragment extends DialogFragment {
+public class BackupGameDialogFragment extends DialogFragment {
 
     @NonNull
     @Override
@@ -19,14 +19,14 @@ public class RestartGameDialogFragment extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(main);
 
-        builder.setTitle(getString(R.string.txtRestartDialogTitle))
-                .setMessage(getString(R.string.txtRestartDialogMessage))
+        builder.setTitle(getString(R.string.txtBackupDialogTitle))
+                .setMessage(getString(R.string.txtBackupDialogMessage))
                 .setPositiveButton(
                         getString(android.R.string.ok),
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                main.reiniciarPartida();
+                                main.recuperarPartida();
                             }
                         }
                 )
