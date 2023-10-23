@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -125,6 +126,11 @@ public class MainActivity extends AppCompatActivity {
                         .setMessage(R.string.aboutMessage)
                         .setPositiveButton(android.R.string.ok, null)
                         .show();
+                return true;
+
+            case R.id.opcReiniciarPartida:
+                DialogFragment restartGameDialog = new RestartGameDialogFragment();
+                restartGameDialog.show(getSupportFragmentManager(), "RestartGameDialogFragment");
                 return true;
 
             // @TODO!!! resto opciones
