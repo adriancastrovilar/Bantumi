@@ -27,4 +27,8 @@ public class GameResultRepository {
         });
     }
 
+    void deleteAll() {
+        GameResultRoomDatabase.databaseWriteExecutor.execute(gameResultDAO::deleteAll);
+    }
+
 }

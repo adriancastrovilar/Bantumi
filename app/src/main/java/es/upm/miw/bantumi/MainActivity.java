@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Muestra el valor <i>valor</i> en la posición <i>pos</i>
      *
-     * @param pos posición a actualizar
+     * @param pos   posición a actualizar
      * @param valor valor a mostrar
      */
     private void mostrarValor(int pos, int valor) {
@@ -172,7 +172,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        Intent intent;
 
         switch (item.getItemId()) {
 

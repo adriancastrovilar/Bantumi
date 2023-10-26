@@ -59,5 +59,9 @@
     <string name="txtNoSaveFile">No hay partidas guardadas que recuperar</string>
     <string name="profile_header">Perfil</string>
     <string name="playername_title">Nombre</string>
+    <string name="txtBorrarBestResults">Borrar los mejores resultados</string>
+    <string name="txtDeleteGameResultsDialogTitle">Borrar datos</string>
+    <string name="txtDeleteGameResultsDialogMessage">¿Desea borrar todos los resultados?</string>
+    <string name="txtBestResultsBorrados">Se ha realizado el borrado correctamente!</string>
 
 </resources>

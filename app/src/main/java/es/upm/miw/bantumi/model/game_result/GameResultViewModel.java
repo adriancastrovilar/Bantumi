@@ -26,4 +26,7 @@ public class GameResultViewModel extends AndroidViewModel {
         gameResultRepository.insert(gameResult);
     }
 
+    public void deleteAll() {
+        gameResultRepository.deleteAll();
+    }
 }
