@@ -30,6 +30,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Objects;
 
+import es.upm.miw.bantumi.fragments.BackupGameDialogFragment;
+import es.upm.miw.bantumi.fragments.RestartGameDialogFragment;
+import es.upm.miw.bantumi.fragments.SaveGameDialogFragment;
 import es.upm.miw.bantumi.model.BantumiViewModel;
 import es.upm.miw.bantumi.model.game_result.GameResult;
 import es.upm.miw.bantumi.model.game_result.GameResultViewModel;
@@ -169,6 +172,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Intent intent;
+
         switch (item.getItemId()) {
 //            case R.id.opcAjustes: // @todo Preferencias
 //                startActivity(new Intent(this, BantumiPrefs.class));
@@ -197,7 +202,12 @@ public class MainActivity extends AppCompatActivity {
                 return true;
 
             case R.id.opcAjustes:
-                Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+                intent = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivity(intent);
+                return true;
+
+            case R.id.opcMejoresResultados:
+                intent = new Intent(getApplicationContext(), GameResultActivity.class);
                 startActivity(intent);
                 return true;
 

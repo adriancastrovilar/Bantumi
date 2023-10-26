@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="30dp"
+    android:background="@color/teal_200"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/tvWinnerName"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/tvWinnerSeeds"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/tvLoserName"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/tvLoserSeeds"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/tvEndDate"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="4"
+        android:textColor="@color/black" />
+
+</LinearLayout>
