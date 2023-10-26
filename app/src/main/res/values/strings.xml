@@ -57,5 +57,7 @@
     <string name="txtBackupDialogMessage">¿Desea cargar el estado de la partida previamente guardada?</string>
     <string name="txtBackupGame">Partida recuperada correctamente!</string>
     <string name="txtNoSaveFile">No hay partidas guardadas que recuperar</string>
+    <string name="profile_header">Perfil</string>
+    <string name="playername_title">Nombre</string>
 
 </resources>

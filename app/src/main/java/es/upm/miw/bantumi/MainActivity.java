@@ -1,8 +1,8 @@
 package es.upm.miw.bantumi;
 
-import static android.provider.Settings.System.getString;
-
 import android.app.AlertDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -46,6 +47,27 @@ public class MainActivity extends AppCompatActivity {
         bantumiVM = new ViewModelProvider(this).get(BantumiViewModel.class);
         juegoBantumi = new JuegoBantumi(bantumiVM, JuegoBantumi.Turno.turnoJ1, numInicialSemillas);
         crearObservadores();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String prefPlayerName = preferences.getString(
+                "playername",
+                getString(R.string.playername_title)
+        );
+        setPlayerName(prefPlayerName);
+    }
+
+    private void setPlayerName(String playerName) {
+        TextView tvJugador1 = findViewById(R.id.tvPlayer1);
+        if (!playerName.isEmpty()) {
+            tvJugador1.setText(playerName);
+        } else {
+            tvJugador1.setText(R.string.txtPlayer1);
+        }
     }
 
     /**
@@ -150,6 +172,11 @@ public class MainActivity extends AppCompatActivity {
             case R.id.opcRecuperarPartida:
                 DialogFragment backupGameDialog = new BackupGameDialogFragment();
                 backupGameDialog.show(getSupportFragmentManager(), "BackupGameDialogFragment");
+                return true;
+
+            case R.id.opcAjustes:
+                Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivity(intent);
                 return true;
 
             // @TODO!!! resto opciones
