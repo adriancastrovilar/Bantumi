@@ -175,9 +175,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent;
 
         switch (item.getItemId()) {
-//            case R.id.opcAjustes: // @todo Preferencias
-//                startActivity(new Intent(this, BantumiPrefs.class));
-//                return true;
+
             case R.id.opcAcercaDe:
                 new AlertDialog.Builder(this)
                         .setTitle(R.string.aboutTitle)
@@ -202,16 +200,12 @@ public class MainActivity extends AppCompatActivity {
                 return true;
 
             case R.id.opcAjustes:
-                intent = new Intent(getApplicationContext(), SettingsActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                 return true;
 
             case R.id.opcMejoresResultados:
-                intent = new Intent(getApplicationContext(), GameResultActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(getApplicationContext(), GameResultActivity.class));
                 return true;
-
-            // @TODO!!! resto opciones
 
             default:
                 showSnackbarById(R.string.txtSinImplementar);
