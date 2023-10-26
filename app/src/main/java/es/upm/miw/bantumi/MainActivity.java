@@ -25,10 +25,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Objects;
 
 import es.upm.miw.bantumi.model.BantumiViewModel;
+import es.upm.miw.bantumi.model.game_result.GameResult;
+import es.upm.miw.bantumi.model.game_result.GameResultViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,37 +41,55 @@ public class MainActivity extends AppCompatActivity {
     BantumiViewModel bantumiVM;
     int numInicialSemillas;
 
+    GameResultViewModel gameResultViewModel;
+    SharedPreferences preferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         // Instancia el ViewModel y el juego, y asigna observadores a los huecos
-        numInicialSemillas = getResources().getInteger(R.integer.intNumInicialSemillas);
-        bantumiVM = new ViewModelProvider(this).get(BantumiViewModel.class);
-        juegoBantumi = new JuegoBantumi(bantumiVM, JuegoBantumi.Turno.turnoJ1, numInicialSemillas);
+        this.numInicialSemillas = getResources().getInteger(R.integer.intNumInicialSemillas);
+        this.bantumiVM = new ViewModelProvider(this).get(BantumiViewModel.class);
+        this.juegoBantumi = new JuegoBantumi(bantumiVM, JuegoBantumi.Turno.turnoJ1, numInicialSemillas);
+        this.gameResultViewModel = new ViewModelProvider(this).get(GameResultViewModel.class);
+        this.preferences = PreferenceManager.getDefaultSharedPreferences(this);
         crearObservadores();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        prefSet();
+    }
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String prefPlayerName = preferences.getString(
+    private void prefSet() {
+        prefSetPlayerName();
+    }
+
+    private void prefSetPlayerName() {
+        TextView tvJugador1 = findViewById(R.id.tvPlayer1);
+        tvJugador1.setText(getPlayerName());
+    }
+
+    private String getPlayerName() {
+        if (prefGetPlayerName().isEmpty()) {
+            return "Jugador 1";
+        } else {
+            return prefGetPlayerName();
+        }
+    }
+
+    private String getMachineName() {
+        return "Jugador 2";
+    }
+
+    private String prefGetPlayerName() {
+        return this.preferences.getString(
                 "playername",
                 getString(R.string.playername_title)
         );
-        setPlayerName(prefPlayerName);
-    }
-
-    private void setPlayerName(String playerName) {
-        TextView tvJugador1 = findViewById(R.id.tvPlayer1);
-        if (!playerName.isEmpty()) {
-            tvJugador1.setText(playerName);
-        } else {
-            tvJugador1.setText(R.string.txtPlayer1);
-        }
     }
 
     /**
@@ -231,20 +253,49 @@ public class MainActivity extends AppCompatActivity {
      * El juego ha terminado. Volver a jugar?
      */
     private void finJuego() {
-        String texto = (juegoBantumi.getSemillas(6) > 6 * numInicialSemillas)
-                ? "Gana Jugador 1"
-                : "Gana Jugador 2";
-        if (juegoBantumi.getSemillas(6) == 6 * numInicialSemillas) {
+        String texto = "";
+        String winnerName = "";
+        int winnerPosition = 0;
+        String loserName = "";
+        int loserPosition = 0;
+
+        if (juegoBantumi.getSemillas(6) > 6 * numInicialSemillas) {
+            texto += "Gana " + getPlayerName();
+            winnerName += getPlayerName();
+            winnerPosition = 6;
+            loserName += getMachineName();
+            loserPosition = JuegoBantumi.NUM_POSICIONES - 1;
+        } else if (juegoBantumi.getSemillas(6) < 6 * numInicialSemillas) {
+            texto += "Gana Jugador 2";
+            winnerName += getMachineName();
+            winnerPosition = JuegoBantumi.NUM_POSICIONES - 1;
+            loserName += getPlayerName();
+            loserPosition = 6;
+        } else if (juegoBantumi.getSemillas(6) == 6 * numInicialSemillas) {
             texto = "¡¡¡ EMPATE !!!";
+            winnerName += "-";
+            loserName += "-";
         }
         Snackbar.make(
-                findViewById(android.R.id.content),
-                texto,
-                Snackbar.LENGTH_LONG
-        )
-        .show();
+                        findViewById(android.R.id.content),
+                        texto,
+                        Snackbar.LENGTH_LONG
+                )
+                .show();
 
-        // @TODO guardar puntuación
+        // Almacenar el resultado de la partida
+        GameResult gameResult = new GameResult();
+
+        gameResult.setWinnerName(winnerName);
+        gameResult.setWinnerSeeds(this.juegoBantumi.getSemillas(winnerPosition));
+
+        gameResult.setLoserName(loserName);
+        gameResult.setLoserSeeds(this.juegoBantumi.getSemillas(loserPosition));
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        gameResult.setEndDate(LocalDateTime.now().format(formatter));
+
+        this.gameResultViewModel.insert(gameResult);
 
         // terminar
         new FinalAlertDialog().show(getSupportFragmentManager(), "ALERT_DIALOG");
