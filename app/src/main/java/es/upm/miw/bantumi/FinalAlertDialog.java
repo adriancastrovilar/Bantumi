@@ -12,8 +12,8 @@ public class FinalAlertDialog extends DialogFragment {
 
     @NonNull
     @Override
-	public AppCompatDialog onCreateDialog(Bundle savedInstanceState) {
-		final MainActivity main = (MainActivity) requireActivity();
+    public AppCompatDialog onCreateDialog(Bundle savedInstanceState) {
+        final MainActivity main = (MainActivity) requireActivity();
 
         assert main != null;
         AlertDialog.Builder builder = new AlertDialog.Builder(main);
@@ -39,6 +39,6 @@ public class FinalAlertDialog extends DialogFragment {
                         }
                 );
 
-		return builder.create();
-	}
+        return builder.create();
+    }
 }
